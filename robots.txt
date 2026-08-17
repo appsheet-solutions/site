@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://appsheet-solutions.github.io/site/sitemap.xml
+Sitemap: https://appsheet.solutions/sitemap.xml
