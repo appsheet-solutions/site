@@ -2190,7 +2190,8 @@
           rollups[name] = {};
         }
         rollups[name].js = [
-        "js/common-vendors-149cb9ab67a431ec-min.en-us.js"];
+          "js/common-vendors-149cb9ab67a431ec-min.en-us.js"
+        ];
       })(SQUARESPACE_ROLLUPS, 'squarespace-common_vendors');
     </script>
     <script src="js/common-vendors-149cb9ab67a431ec-min.en-us.js" defer>
@@ -10687,6 +10688,14 @@
                               style="width: 100%; max-width: 580px; margin: 0 auto; padding: 10px 0; font-family: inherit;">
 
                               <form id="appsheetContactForm">
+                                <!-- Honeypot field - invisible to humans, bots often fill it in -->
+                                <div
+                                  style="position: absolute; left: -9999px; top: -9999px;"
+                                  aria-hidden="true">
+                                  <label for="website">Website</label>
+                                  <input type="text" id="website" name="website"
+                                    tabindex="-1" autocomplete="off">
+                                </div>
                                 <!-- Business Name -->
                                 <div style="margin-bottom: 18px;">
                                   <label
@@ -10823,6 +10832,26 @@
                           document.getElementById('appsheetContactForm')
                             .addEventListener('submit', function(e) {
                               e.preventDefault();
+
+                              // Honeypot check — if this hidden field has a value, it's a bot.
+                              // Silently pretend to succeed so bots don't learn to avoid the field.
+                              const honeypot = document.getElementById(
+                                'website').value;
+                              if (honeypot) {
+                                document.getElementById(
+                                  'appsheetContactForm').reset();
+                                const responseDiv = document.getElementById(
+                                  'formResponse');
+                                responseDiv.style.color = '#0f5132';
+                                responseDiv.style.backgroundColor =
+                                  '#d1e7dd';
+                                responseDiv.style.border =
+                                  '1px solid #badbcc';
+                                responseDiv.innerHTML =
+                                  "<strong>Thanks for reaching out!</strong><br>We'll contact you within 1 business day.";
+                                responseDiv.style.display = 'block';
+                                return; // stop here — never actually calls fetch(), so nothing hits your Sheet/inbox
+                              }
 
                               const submitBtn = document.getElementById(
                                 'submitBtn');
